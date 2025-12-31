@@ -1,57 +1,27 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { removeItem, updateQuantity } from "./CartSlice";
+cart_item_content = """import React from 'react';
+import { useSelector } from 'react-redux';
 
-function CartItem() {
-  const cartItems = useSelector((state) => state.cart.items);
-  const dispatch = useDispatch();
+const CartItem = () => {
+    const cart = useSelector(state => state.cart.cart);
+    const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  return (
-    <div>
-      <h1>Shopping Cart</h1>
-
-      {cartItems.length === 0 && <p>Your cart is empty</p>}
-
-      {cartItems.map((item) => (
-        <div key={item.id}>
-          <h3>{item.name}</h3>
-          <p>Price: ${item.price}</p>
-          <p>Quantity: {item.quantity}</p>
-
-          <button
-            onClick={() =>
-              dispatch(
-                updateQuantity({
-                  id: item.id,
-                  quantity: item.quantity + 1
-                })
-              )
-            }
-          >
-            +
-          </button>
-
-          <button
-            onClick={() =>
-              dispatch(
-                updateQuantity({
-                  id: item.id,
-                  quantity: item.quantity - 1
-                })
-              )
-            }
-            disabled={item.quantity <= 1}
-          >
-            -
-          </button>
-
-          <button onClick={() => dispatch(removeItem(item.id))}>
-            Remove
-          </button>
+    return (
+        <div>
+            {cart.map(item => (
+                <div key={item.id}>
+                    <h4>{item.name}</h4>
+                    <p>Quantity: {item.quantity}</p>
+                    <p>Price: ${item.price}</p>
+                </div>
+            ))}
+            <h3>Total: ${totalAmount}</h3>
         </div>
-      ))}
-    </div>
-  );
-}
+    );
+};
 
 export default CartItem;
+"""
+with open(f"{project_name}/CartItem.jsx", "w") as f:
+    f.write(cart_item_content)
+
+print(f"Project '{project_name}' structure created successfully!")
